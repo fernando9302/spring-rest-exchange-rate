@@ -31,13 +31,13 @@ public class ExchangeRateServiceImpl implements ExchangeRateService {
     }
 
     private void validCurrencyExist(ConversionCurrencyRequest conversionCurrencyRequest) throws Exception {
-        validateIfCurrencyExists(conversionCurrencyRequest.getCurrencyFrom());
-        validateIfCurrencyExists(conversionCurrencyRequest.getCurrencyTo());
+        validateIfCurrencyExists(conversionCurrencyRequest.getCurrencyFrom(), "From");
+        validateIfCurrencyExists(conversionCurrencyRequest.getCurrencyTo(), "To");
     }
 
-    private void validateIfCurrencyExists(String currency) {
+    private void validateIfCurrencyExists(String currency, String currencyType) {
         if(currencyRepository.getByCode(currency).isEmpty())
-            throw new BusinessValidationException(String.format("Currency %s doesn't exist", currency));
+            throw new BusinessValidationException(String.format("Currency %s %s doesn't exist", currencyType, currency));
     }
 
     private ExchangeRate getExchangeRate(String currencyFrom, String currencyTo){
