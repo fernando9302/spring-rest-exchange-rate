@@ -2,7 +2,7 @@ package com.interbank.periferiait.springrestexchangerate.application.controllers
 
 import com.interbank.periferiait.springrestexchangerate.application.request.ConversionCurrencyRequest;
 import com.interbank.periferiait.springrestexchangerate.application.response.ConversionCurrencyResponse;
-import com.interbank.periferiait.springrestexchangerate.infraestructure.generics.GenericResponse;
+import com.interbank.periferiait.springrestexchangerate.infraestructure.generic.GenericResponse;
 import com.interbank.periferiait.springrestexchangerate.application.services.ExchangeRateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

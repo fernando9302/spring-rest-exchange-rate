@@ -1,7 +1,7 @@
 package com.interbank.periferiait.springrestexchangerate.domain.repository.currency;
 
 import com.interbank.periferiait.springrestexchangerate.domain.model.Currency;
-import com.interbank.periferiait.springrestexchangerate.infraestructure.repository.CurrencySqlRepository;
+import com.interbank.periferiait.springrestexchangerate.infraestructure.persistence.repository.CurrencySqlRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 

@@ -5,7 +5,7 @@ import com.interbank.periferiait.springrestexchangerate.application.response.Con
 import com.interbank.periferiait.springrestexchangerate.domain.model.ExchangeRate;
 import com.interbank.periferiait.springrestexchangerate.domain.repository.currency.CurrencyRepository;
 import com.interbank.periferiait.springrestexchangerate.domain.repository.exchangerate.ExchangeRateRepository;
-import com.interbank.periferiait.springrestexchangerate.infraestructure.exception.BusinessValidationException;
+import com.interbank.periferiait.springrestexchangerate.domain.exception.BusinessValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

@@ -6,7 +6,7 @@ import com.interbank.periferiait.springrestexchangerate.domain.model.Currency;
 import com.interbank.periferiait.springrestexchangerate.domain.model.ExchangeRate;
 import com.interbank.periferiait.springrestexchangerate.domain.repository.currency.CurrencyRepository;
 import com.interbank.periferiait.springrestexchangerate.domain.repository.exchangerate.ExchangeRateRepository;
-import com.interbank.periferiait.springrestexchangerate.infraestructure.exception.BusinessValidationException;
+import com.interbank.periferiait.springrestexchangerate.domain.exception.BusinessValidationException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

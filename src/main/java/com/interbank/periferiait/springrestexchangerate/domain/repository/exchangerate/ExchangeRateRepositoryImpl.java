@@ -1,8 +1,7 @@
 package com.interbank.periferiait.springrestexchangerate.domain.repository.exchangerate;
 
 import com.interbank.periferiait.springrestexchangerate.domain.model.ExchangeRate;
-import com.interbank.periferiait.springrestexchangerate.infraestructure.persistence.ExchangeRateEntity;
-import com.interbank.periferiait.springrestexchangerate.infraestructure.repository.ExchangeRateSqlRepository;
+import com.interbank.periferiait.springrestexchangerate.infraestructure.persistence.repository.ExchangeRateSqlRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 

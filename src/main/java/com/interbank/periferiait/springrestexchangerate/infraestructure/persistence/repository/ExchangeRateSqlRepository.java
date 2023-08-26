@@ -1,6 +1,6 @@
-package com.interbank.periferiait.springrestexchangerate.infraestructure.repository;
+package com.interbank.periferiait.springrestexchangerate.infraestructure.persistence.repository;
 
-import com.interbank.periferiait.springrestexchangerate.infraestructure.persistence.ExchangeRateEntity;
+import com.interbank.periferiait.springrestexchangerate.infraestructure.persistence.entity.ExchangeRateEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.time.LocalDate;

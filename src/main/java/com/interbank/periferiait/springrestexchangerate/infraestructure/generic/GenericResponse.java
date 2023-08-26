@@ -1,4 +1,4 @@
-package com.interbank.periferiait.springrestexchangerate.infraestructure.generics;
+package com.interbank.periferiait.springrestexchangerate.infraestructure.generic;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;

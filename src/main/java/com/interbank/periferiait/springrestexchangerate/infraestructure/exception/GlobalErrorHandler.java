@@ -1,6 +1,7 @@
 package com.interbank.periferiait.springrestexchangerate.infraestructure.exception;
 
-import com.interbank.periferiait.springrestexchangerate.infraestructure.generics.GenericResponse;
+import com.interbank.periferiait.springrestexchangerate.domain.exception.BusinessValidationException;
+import com.interbank.periferiait.springrestexchangerate.infraestructure.generic.GenericResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;

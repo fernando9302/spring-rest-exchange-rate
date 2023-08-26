@@ -1,4 +1,4 @@
-package com.interbank.periferiait.springrestexchangerate.infraestructure.exception;
+package com.interbank.periferiait.springrestexchangerate.domain.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;

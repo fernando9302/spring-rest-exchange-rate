@@ -1,4 +1,4 @@
-package com.interbank.periferiait.springrestexchangerate.infraestructure.persistence;
+package com.interbank.periferiait.springrestexchangerate.infraestructure.persistence.entity;
 
 import com.interbank.periferiait.springrestexchangerate.domain.model.ExchangeRate;
 import jakarta.persistence.*;
