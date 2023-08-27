@@ -1,6 +1,7 @@
 package com.interbank.periferiait.springrestexchangerate.application.controllers;
 
 import com.interbank.periferiait.springrestexchangerate.application.request.ConversionCurrencyRequest;
+import com.interbank.periferiait.springrestexchangerate.application.request.ExchangeRateRequest;
 import com.interbank.periferiait.springrestexchangerate.application.response.ConversionCurrencyResponse;
 import com.interbank.periferiait.springrestexchangerate.infraestructure.generic.GenericResponse;
 import com.interbank.periferiait.springrestexchangerate.application.services.ExchangeRateService;
@@ -20,4 +21,11 @@ public class ExchangeRateController {
         ConversionCurrencyResponse response = exchangeRateService.convertAmount(new ConversionCurrencyRequest(currencyFrom, currencyTo, amount));
         return ResponseEntity.ok(new GenericResponse<>(response));
     }
+
+    @PostMapping("/change-value")
+    public ResponseEntity<GenericResponse> save(@RequestBody ExchangeRateRequest exchangeRateRequest) throws Exception {
+        exchangeRateService.saveExchangeRate(exchangeRateRequest);
+        return ResponseEntity.ok(new GenericResponse());
+    }
+
 }

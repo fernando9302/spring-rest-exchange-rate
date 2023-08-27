@@ -11,10 +11,12 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.request;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -43,5 +45,17 @@ class ExchangeRateControllerTest {
         mockMvc.perform(request(HttpMethod.valueOf(method), endpoint))
                 .andExpect(status().is(expectedStatusCode))
                 .andExpect(jsonPath("$.response", Matchers.notNullValue()));
+    }
+
+    @Test
+    void testSaveExchangeRateController() throws Exception {
+        String method = "POST";
+        String endpoint = "/api/v1/exchange-rate/change-value";
+        Integer expectedStatusCode = 200;
+        String body = "{\"currencyFrom\":\"EUR\",\"currencyTo\":\"PIK\",\"date\":\"27/08/2023\",\"amount\":5}";
+        Mockito.doNothing().when(exchangeRateService).saveExchangeRate(any());
+        mockMvc.perform(request(HttpMethod.valueOf(method), endpoint)
+                .content(body).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().is(expectedStatusCode));
     }
 }

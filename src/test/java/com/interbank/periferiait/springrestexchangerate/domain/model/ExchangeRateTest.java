@@ -17,7 +17,7 @@ class ExchangeRateTest {
     @Test
     void testConversion(){
         Double amountToConvert = 120.56;
-       ExchangeRate exchangeRate = new ExchangeRate(UUID.randomUUID().toString(), "PEN", "USD", LocalDate.now(), 3.71);
+       ExchangeRate exchangeRate = new ExchangeRate(UUID.randomUUID().toString(), new Currency(UUID.randomUUID().toString(), "PEN","Soles"), new Currency(UUID.randomUUID().toString(), "USD","Dollars"), LocalDate.now(), 3.71);
        assertEquals(447.2776, exchangeRate.convert(amountToConvert));
     }
 }

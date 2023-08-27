@@ -1,6 +1,7 @@
 package com.interbank.periferiait.springrestexchangerate.application.services;
 
 import com.interbank.periferiait.springrestexchangerate.application.request.ConversionCurrencyRequest;
+import com.interbank.periferiait.springrestexchangerate.application.request.ExchangeRateRequest;
 import com.interbank.periferiait.springrestexchangerate.application.response.ConversionCurrencyResponse;
 import com.interbank.periferiait.springrestexchangerate.domain.model.Currency;
 import com.interbank.periferiait.springrestexchangerate.domain.model.ExchangeRate;
@@ -22,6 +23,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 
 @ExtendWith(SpringExtension.class)
 @DisplayName("Exchange Rate Service")
@@ -36,16 +38,19 @@ class ExchangeRateServiceImplTest {
     @InjectMocks
     private ExchangeRateServiceImpl exchangeRateService;
 
+    private Currency pen;
+    private  Currency usd;
+
     @BeforeEach
     void init(){
         MockitoAnnotations.openMocks(this);
-        Currency pen = new Currency(UUID.randomUUID().toString(), "PEN", "SOLES");
-        Currency usd = new Currency(UUID.randomUUID().toString(), "USD", "DOLLARS");
+        pen = new Currency(UUID.randomUUID().toString(), "PEN", "SOLES");
+        usd = new Currency(UUID.randomUUID().toString(), "USD", "DOLLARS");
         Double exchangeRateAmount = 3.71;
         LocalDate date = LocalDate.now().minusDays(1);
         Mockito.when(currencyRepository.getByCode("PEN")).thenReturn(Optional.of(pen));
         Mockito.when(currencyRepository.getByCode("USD")).thenReturn(Optional.of(usd));
-        Mockito.when(exchangeRateRepository.getByCurrencyFromAndCurrencyToAndDate(pen.getCode(), usd.getCode(), date)).thenReturn(Optional.of(new ExchangeRate(UUID.randomUUID().toString(), pen.getCode(), usd.getCode(), date, exchangeRateAmount)));
+        Mockito.when(exchangeRateRepository.getByCurrencyFromAndCurrencyToAndDate(pen.getCode(), usd.getCode(), date)).thenReturn(Optional.of(new ExchangeRate(UUID.randomUUID().toString(), pen, usd, date, exchangeRateAmount)));
     }
 
     @Test
@@ -89,10 +94,48 @@ class ExchangeRateServiceImplTest {
         Double exchangeRateAmount = 3.71;
         LocalDate date = LocalDate.now();
         ConversionCurrencyRequest conversionCurrencyRequest = new ConversionCurrencyRequest(currencyFrom, currencyTo, amount);
-        Mockito.when(exchangeRateRepository.getByCurrencyFromAndCurrencyToAndDate(currencyFrom, currencyTo, date)).thenReturn(Optional.of(new ExchangeRate(UUID.randomUUID().toString(), currencyFrom, currencyTo, date, exchangeRateAmount)));
+        Mockito.when(exchangeRateRepository.getByCurrencyFromAndCurrencyToAndDate(currencyFrom, currencyTo, date)).thenReturn(Optional.of(new ExchangeRate(UUID.randomUUID().toString(), pen, usd, date, exchangeRateAmount)));
         ConversionCurrencyResponse conversionCurrencyResponse = exchangeRateService.convertAmount(conversionCurrencyRequest);
         ConversionCurrencyResponse expectedConversionCurrencyResponse = new ConversionCurrencyResponse(Double.parseDouble(amount), convertedAmount , currencyFrom, currencyTo, exchangeRateAmount);
         assertNotNull(conversionCurrencyResponse);
         assertEquals(expectedConversionCurrencyResponse, conversionCurrencyResponse);
     }
+
+    @Test
+    void testSaveExchangeRateWithCurrencyFromDoesNotExist(){
+        String currencyFrom = "EUR";
+        String currencyTo = "USD";
+        Double amount = 120.56;
+        String currencyType = "From";
+        LocalDate date = LocalDate.now();
+        ExchangeRateRequest exchangeRateRequest = new ExchangeRateRequest(currencyFrom, currencyTo, date, amount);
+        BusinessValidationException error = assertThrows(BusinessValidationException.class, ()->exchangeRateService.saveExchangeRate(exchangeRateRequest));
+        assertEquals(String.format("Currency %s %s doesn't exist", currencyType, currencyFrom), error.getMessage());
+    }
+
+    @Test
+    void testSaveExchangeRateWithCurrencyToDoesNotExist(){
+        String currencyFrom = "PEN";
+        String currencyTo = "EUR";
+        Double amount = 120.56;
+        String currencyType = "To";
+        LocalDate date = LocalDate.now();
+        ExchangeRateRequest exchangeRateRequest = new ExchangeRateRequest(currencyFrom, currencyTo, date, amount);
+        BusinessValidationException error = assertThrows(BusinessValidationException.class, ()->exchangeRateService.saveExchangeRate(exchangeRateRequest));
+        assertEquals(String.format("Currency %s %s doesn't exist", currencyType, currencyTo ), error.getMessage());
+    }
+
+    @Test
+    void testSaveOk() throws Exception {
+        String currencyFrom = "PEN";
+        String currencyTo = "USD";
+        Double amount = 120.56;
+        Double exchangeRateAmount = 3.71;
+        LocalDate date = LocalDate.now();
+        ExchangeRateRequest exchangeRateRequest = new ExchangeRateRequest(currencyFrom, currencyTo, date, amount);
+        Mockito.when(exchangeRateRepository.getByCurrencyFromAndCurrencyToAndDate(currencyFrom, currencyTo, date)).thenReturn(Optional.of(new ExchangeRate(UUID.randomUUID().toString(), pen, usd, date, exchangeRateAmount)));
+        exchangeRateService.saveExchangeRate(exchangeRateRequest);
+        Mockito.verify(exchangeRateRepository, Mockito.times(2)).save(any());
+    }
+
 }

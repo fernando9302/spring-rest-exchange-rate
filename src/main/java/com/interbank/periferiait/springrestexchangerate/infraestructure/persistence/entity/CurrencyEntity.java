@@ -7,10 +7,14 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.Data;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name = "currency")
 @Getter
+@Setter
+@NoArgsConstructor
 public class CurrencyEntity {
     @Id
     @Column(name = "id", length = 36)
@@ -21,6 +25,12 @@ public class CurrencyEntity {
 
     @Column(name = "description", length = 100)
     private String description;
+
+    public CurrencyEntity(Currency currency){
+        this.id = currency.getId();
+        this.code = currency.getCode();
+        this.description = currency.getDescription();
+    }
 
     public Currency toDomain(){
         return new Currency(id, code, description);

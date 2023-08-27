@@ -3,6 +3,7 @@ package com.interbank.periferiait.springrestexchangerate.infraestructure.persist
 import com.interbank.periferiait.springrestexchangerate.domain.model.ExchangeRate;
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -10,6 +11,7 @@ import java.time.LocalDate;
 @Entity
 @Table(name = "exchange_rate")
 @Getter
+@NoArgsConstructor
 public class ExchangeRateEntity {
 
     @Id
@@ -30,7 +32,15 @@ public class ExchangeRateEntity {
     @Column(name = "amount", precision = 10, scale = 3)
     private BigDecimal amount;
 
+    public ExchangeRateEntity(ExchangeRate exchangeRate){
+        this.id = exchangeRate.getId();
+        this.currencyFrom = new CurrencyEntity(exchangeRate.getCurrencyFrom());
+        this.currencyTo = new CurrencyEntity(exchangeRate.getCurrencyTo());
+        this.date = exchangeRate.getDate();
+        this.amount = BigDecimal.valueOf(exchangeRate.getAmount());
+    }
+
     public ExchangeRate toDomain(){
-        return new ExchangeRate(id, currencyFrom.getCode(), currencyTo.getCode(), date, amount.doubleValue());
+        return new ExchangeRate(id, currencyFrom.toDomain(), currencyTo.toDomain(), date, amount.doubleValue());
     }
 }

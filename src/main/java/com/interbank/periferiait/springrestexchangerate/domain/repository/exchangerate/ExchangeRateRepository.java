@@ -9,4 +9,5 @@ import java.util.Optional;
 
 public interface ExchangeRateRepository {
     Optional<ExchangeRate> getByCurrencyFromAndCurrencyToAndDate(String currencyFrom, String currencyTo, LocalDate date);
+    void save(ExchangeRate exchangeRate);
 }
