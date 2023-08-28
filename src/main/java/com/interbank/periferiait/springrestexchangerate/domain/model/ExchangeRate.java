@@ -2,6 +2,7 @@ package com.interbank.periferiait.springrestexchangerate.domain.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.ToString;
 
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
@@ -10,6 +11,7 @@ import java.util.UUID;
 
 @Data
 @AllArgsConstructor
+@ToString
 public class ExchangeRate {
     private String id;
     private Currency currencyFrom;

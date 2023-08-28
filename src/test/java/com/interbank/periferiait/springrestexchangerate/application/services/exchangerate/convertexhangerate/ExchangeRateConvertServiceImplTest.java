@@ -1,13 +1,15 @@
-package com.interbank.periferiait.springrestexchangerate.application.services;
+package com.interbank.periferiait.springrestexchangerate.application.services.exchangerate.convertexhangerate;
 
-import com.interbank.periferiait.springrestexchangerate.application.request.ConversionCurrencyRequest;
-import com.interbank.periferiait.springrestexchangerate.application.request.ExchangeRateRequest;
-import com.interbank.periferiait.springrestexchangerate.application.response.ConversionCurrencyResponse;
+import static org.junit.jupiter.api.Assertions.*;
+
+import com.interbank.periferiait.springrestexchangerate.application.request.exchangerate.ConversionCurrencyRequest;
+import com.interbank.periferiait.springrestexchangerate.application.response.exchangerate.ConversionCurrencyResponse;
+import com.interbank.periferiait.springrestexchangerate.application.services.exchangerate.convertexhangerate.ExchangeRateConvertServiceImpl;
+import com.interbank.periferiait.springrestexchangerate.domain.exception.BusinessValidationException;
 import com.interbank.periferiait.springrestexchangerate.domain.model.Currency;
 import com.interbank.periferiait.springrestexchangerate.domain.model.ExchangeRate;
 import com.interbank.periferiait.springrestexchangerate.domain.repository.currency.CurrencyRepository;
 import com.interbank.periferiait.springrestexchangerate.domain.repository.exchangerate.ExchangeRateRepository;
-import com.interbank.periferiait.springrestexchangerate.domain.exception.BusinessValidationException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -23,11 +25,10 @@ import java.util.Optional;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
 
 @ExtendWith(SpringExtension.class)
-@DisplayName("Exchange Rate Service")
-class ExchangeRateServiceImplTest {
+@DisplayName("Exchange Rate Convert Service")
+class ExchangeRateConvertServiceImplTest {
 
     @MockBean
     private ExchangeRateRepository exchangeRateRepository;
@@ -36,7 +37,7 @@ class ExchangeRateServiceImplTest {
     private CurrencyRepository currencyRepository;
 
     @InjectMocks
-    private ExchangeRateServiceImpl exchangeRateService;
+    private ExchangeRateConvertServiceImpl exchangeRateConvertService;
 
     private Currency pen;
     private  Currency usd;
@@ -60,8 +61,8 @@ class ExchangeRateServiceImplTest {
         String amount = "120.56";
         String currencyType = "From";
         ConversionCurrencyRequest conversionCurrencyRequest = new ConversionCurrencyRequest(currencyFrom, currencyTo, amount);
-        BusinessValidationException error = assertThrows(BusinessValidationException.class, ()->exchangeRateService.convertAmount(conversionCurrencyRequest));
-        assertEquals(String.format("Currency %s %s doesn't exist", currencyType, currencyFrom), error.getMessage());
+        BusinessValidationException error = assertThrows(BusinessValidationException.class, ()->exchangeRateConvertService.convertAmount(conversionCurrencyRequest));
+        assertEquals(String.format("Currency%s %s doesn't exist", currencyType, currencyFrom), error.getMessage());
     }
 
     @Test
@@ -71,8 +72,8 @@ class ExchangeRateServiceImplTest {
         String amount = "120.56";
         String currencyType = "To";
         ConversionCurrencyRequest conversionCurrencyRequest = new ConversionCurrencyRequest(currencyFrom, currencyTo, amount);
-        BusinessValidationException error = assertThrows(BusinessValidationException.class, ()->exchangeRateService.convertAmount(conversionCurrencyRequest));
-        assertEquals(String.format("Currency %s %s doesn't exist", currencyType, currencyTo ), error.getMessage());
+        BusinessValidationException error = assertThrows(BusinessValidationException.class, ()->exchangeRateConvertService.convertAmount(conversionCurrencyRequest));
+        assertEquals(String.format("Currency%s %s doesn't exist", currencyType, currencyTo ), error.getMessage());
     }
 
     @Test
@@ -81,7 +82,7 @@ class ExchangeRateServiceImplTest {
         String currencyTo = "USD";
         String amount = "120.56";
         ConversionCurrencyRequest conversionCurrencyRequest = new ConversionCurrencyRequest(currencyFrom, currencyTo, amount);
-        BusinessValidationException error = assertThrows(BusinessValidationException.class, ()->exchangeRateService.convertAmount(conversionCurrencyRequest));
+        BusinessValidationException error = assertThrows(BusinessValidationException.class, ()->exchangeRateConvertService.convertAmount(conversionCurrencyRequest));
         assertEquals("Exchange rate doesn't exist", error.getMessage());
     }
 
@@ -95,47 +96,10 @@ class ExchangeRateServiceImplTest {
         LocalDate date = LocalDate.now();
         ConversionCurrencyRequest conversionCurrencyRequest = new ConversionCurrencyRequest(currencyFrom, currencyTo, amount);
         Mockito.when(exchangeRateRepository.getByCurrencyFromAndCurrencyToAndDate(currencyFrom, currencyTo, date)).thenReturn(Optional.of(new ExchangeRate(UUID.randomUUID().toString(), pen, usd, date, exchangeRateAmount)));
-        ConversionCurrencyResponse conversionCurrencyResponse = exchangeRateService.convertAmount(conversionCurrencyRequest);
+        ConversionCurrencyResponse conversionCurrencyResponse = exchangeRateConvertService.convertAmount(conversionCurrencyRequest);
         ConversionCurrencyResponse expectedConversionCurrencyResponse = new ConversionCurrencyResponse(Double.parseDouble(amount), convertedAmount , currencyFrom, currencyTo, exchangeRateAmount);
         assertNotNull(conversionCurrencyResponse);
         assertEquals(expectedConversionCurrencyResponse, conversionCurrencyResponse);
-    }
-
-    @Test
-    void testSaveExchangeRateWithCurrencyFromDoesNotExist(){
-        String currencyFrom = "EUR";
-        String currencyTo = "USD";
-        Double amount = 120.56;
-        String currencyType = "From";
-        LocalDate date = LocalDate.now();
-        ExchangeRateRequest exchangeRateRequest = new ExchangeRateRequest(currencyFrom, currencyTo, date, amount);
-        BusinessValidationException error = assertThrows(BusinessValidationException.class, ()->exchangeRateService.saveExchangeRate(exchangeRateRequest));
-        assertEquals(String.format("Currency %s %s doesn't exist", currencyType, currencyFrom), error.getMessage());
-    }
-
-    @Test
-    void testSaveExchangeRateWithCurrencyToDoesNotExist(){
-        String currencyFrom = "PEN";
-        String currencyTo = "EUR";
-        Double amount = 120.56;
-        String currencyType = "To";
-        LocalDate date = LocalDate.now();
-        ExchangeRateRequest exchangeRateRequest = new ExchangeRateRequest(currencyFrom, currencyTo, date, amount);
-        BusinessValidationException error = assertThrows(BusinessValidationException.class, ()->exchangeRateService.saveExchangeRate(exchangeRateRequest));
-        assertEquals(String.format("Currency %s %s doesn't exist", currencyType, currencyTo ), error.getMessage());
-    }
-
-    @Test
-    void testSaveOk() throws Exception {
-        String currencyFrom = "PEN";
-        String currencyTo = "USD";
-        Double amount = 120.56;
-        Double exchangeRateAmount = 3.71;
-        LocalDate date = LocalDate.now();
-        ExchangeRateRequest exchangeRateRequest = new ExchangeRateRequest(currencyFrom, currencyTo, date, amount);
-        Mockito.when(exchangeRateRepository.getByCurrencyFromAndCurrencyToAndDate(currencyFrom, currencyTo, date)).thenReturn(Optional.of(new ExchangeRate(UUID.randomUUID().toString(), pen, usd, date, exchangeRateAmount)));
-        exchangeRateService.saveExchangeRate(exchangeRateRequest);
-        Mockito.verify(exchangeRateRepository, Mockito.times(2)).save(any());
     }
 
 }

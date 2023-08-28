@@ -1,4 +1,4 @@
-package com.interbank.periferiait.springrestexchangerate.application.response;
+package com.interbank.periferiait.springrestexchangerate.application.response.exchangerate;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
